@@ -22,7 +22,7 @@ extern bool (*app_func_wr_pointer[])(void*);
 /************************************************************************/
 /* Initialize app                                                       */
 /************************************************************************/
-static const uint8_t default_device_name[] = "VestibularVrH1";
+static const uint8_t default_device_name[] = "VestibularH1";
 
 void hwbp_app_initialize(void)
 {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "VestibularVrH1", "VestibularVrH1\VestibularVrH1.cppproj", "{4699B3B7-8E6C-4BA9-9926-134793D51FDA}"
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "VestibularH1", "VestibularH1\VestibularH1.cppproj", "{4699B3B7-8E6C-4BA9-9926-134793D51FDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
