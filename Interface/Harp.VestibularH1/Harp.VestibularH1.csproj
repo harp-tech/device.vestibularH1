@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>VestibularH1</Title>
+    <Description>Bonsai Library containing interfaces for data acquisition and control of devices implementing the Harp protocol.</Description>
+    <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
+    <PackageTags>Bonsai Rx Harp Hardware Protocol</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <VersionPrefix>0.1.0</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <HarpFirmwarePath>..\..\..\Firmware\VestibularH1</HarpFirmwarePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bonsai.Harp" Version="3.4.0" GeneratePathProperty="true" />
+    <PackageReference Include="YamlDotNet" Version="12.3.1" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Harp.tt" />
+    <None Update="Device.tt">
+      <LastGenOutput>Device.Interface.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Device.Interface.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Device.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

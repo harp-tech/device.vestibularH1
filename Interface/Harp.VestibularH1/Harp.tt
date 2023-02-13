@@ -1,0 +1,242 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="$(PkgBonsai_Harp)\\lib\\net462\\Bonsai.Harp.dll" #>
+<#@ import namespace="Bonsai.Harp" #>
+<#+
+public class DeviceInfo
+{
+    public string Device;
+    public int WhoAmI;
+    public HarpVersion FirmwareVersion;
+    public HarpVersion HardwareTargets;
+    public Dictionary<string, RegisterInfo> Registers = new Dictionary<string, RegisterInfo>();
+    public Dictionary<string, BitMaskInfo> BitMasks = new Dictionary<string, BitMaskInfo>();
+    public Dictionary<string, GroupMaskInfo> GroupMasks = new Dictionary<string, GroupMaskInfo>();
+}
+
+[Flags]
+public enum RegisterType
+{
+    Command = 0x1,
+    Event = 0x2
+}
+
+public enum RegisterVisibility
+{
+    Public,
+    Private
+}
+
+public class RegisterInfo
+{
+    public int Address;
+    public string Description = "";
+    public RegisterType RegisterType;
+    public PayloadType PayloadType;
+    public int PayloadLength;
+    public Dictionary<string, PayloadMemberInfo> PayloadSpec;
+    public RegisterVisibility Visibility;
+    public string MaskType;
+    public string Converter;
+
+    public string PayloadInterfaceType => TemplateHelper.GetInterfaceType(PayloadType, PayloadLength);
+}
+
+public class PayloadMemberInfo
+{
+    public int? Mask;
+    public int? Offset;
+    public string MaskType;
+    public string Converter;
+    public string Description = "";
+}
+
+public class BitMaskInfo
+{
+    public string Description = "";
+    public Dictionary<string, int> Bits = new Dictionary<string, int>();
+
+    public string InterfaceType => TemplateHelper.GetInterfaceType(Bits);
+}
+
+public class GroupMaskInfo
+{
+    public string Description = "";
+    public Dictionary<string, int> Values = new Dictionary<string, int>();
+
+    public string InterfaceType => TemplateHelper.GetInterfaceType(Values);
+}
+
+public static class TemplateHelper
+{
+    public static string GetInterfaceType(string name, RegisterInfo register)
+    {
+        if (register.PayloadSpec != null) return $"{name}Payload";
+        else if (!string.IsNullOrEmpty(register.MaskType)) return register.MaskType;
+        else return GetInterfaceType(register.PayloadType);
+    }
+
+    public static string GetInterfaceType(PayloadType payloadType)
+    {
+        switch (payloadType)
+        {
+            case PayloadType.U8: return "byte";
+            case PayloadType.S8: return "sbyte";
+            case PayloadType.U16: return "ushort";
+            case PayloadType.S16: return "short";
+            case PayloadType.U32: return "uint";
+            case PayloadType.S32: return "int";
+            case PayloadType.U64: return "ulong";
+            case PayloadType.S64: return "long";
+            case PayloadType.Float: return "float";
+            default: throw new ArgumentOutOfRangeException(nameof(payloadType));
+        }
+    }
+
+    public static string GetInterfaceType(PayloadType payloadType, int payloadLength)
+    {
+        var baseType = GetInterfaceType(payloadType);
+        if (payloadLength > 0) return $"{baseType}[]";
+        else return baseType;
+    }
+
+    public static string GetInterfaceType(Dictionary<string, int> maskValues)
+    {
+        var max = maskValues.Values.Max();
+        if (max <= byte.MaxValue) return "byte";
+        if (max <= ushort.MaxValue) return "ushort";
+        else return "uint";
+    }
+
+    public static string GetPayloadTypeSuffix(PayloadType payloadType, int payloadLength = 0)
+    {
+        if (payloadLength > 0)
+        {
+            var baseType = GetInterfaceType(payloadType);
+            return $"Array<{baseType}>";
+        }
+
+        switch (payloadType)
+        {
+            case PayloadType.U8: return "Byte";
+            case PayloadType.S8: return "SByte";
+            case PayloadType.U16: return "UInt16";
+            case PayloadType.S16: return "Int16";
+            case PayloadType.U32: return "UInt32";
+            case PayloadType.S32: return "Int32";
+            case PayloadType.U64: return "UInt64";
+            case PayloadType.S64: return "Int64";
+            case PayloadType.Float: return "Single";
+            default: throw new ArgumentOutOfRangeException(nameof(payloadType));
+        }
+    }
+
+    public static string GetEventConversion(RegisterInfo register, string expression)
+    {
+        var converter = register.Converter;
+        if (!string.IsNullOrEmpty(converter)) return $"{converter}({expression})";
+        if (register.PayloadSpec != null) return $"Parse({expression})";
+        return GetConversionToMaskType(register.MaskType, expression);
+    }
+
+    public static string GetCommandConversion(RegisterInfo register, string expression)
+    {
+        var converter = register.Converter;
+        if (!string.IsNullOrEmpty(converter)) return $"{converter}({expression})";
+        if (register.PayloadSpec != null) return $"Format({expression})";
+        return GetConversionToMaskType(register.PayloadInterfaceType, expression);
+    }
+
+    public static string GetConversionToMaskType(string maskType, string expression)
+    {
+        if (string.IsNullOrEmpty(maskType)) return expression;
+        switch (maskType)
+        {
+            case "bool": return $"{expression} != 0";
+            default: return $"({maskType}){expression}";
+        }
+    }
+
+    static int GetMaskShift(int mask)
+    {
+        var lsb = mask & (~mask + 1);
+        return (int)Math.Log(lsb, 2);
+    }
+
+    public static string GetPayloadMemberParser(
+        PayloadMemberInfo member,
+        string expression,
+        PayloadType payloadType)
+    {
+        if (member.Offset.HasValue)
+        {
+            expression = $"{expression}[{member.Offset.Value}]";
+        }
+        if (member.Mask.HasValue)
+        {
+            var mask = member.Mask.Value;
+            var shift = GetMaskShift(mask);
+            expression = $"({expression} & 0x{mask.ToString("X")})";
+            if (member.MaskType != "bool")
+            {
+                if (shift > 0)
+                {
+                    expression = $"({expression} >> {shift})";
+                }
+
+                var payloadInterfaceType = GetInterfaceType(payloadType);
+                expression = $"({payloadInterfaceType}){expression}";
+            }
+        }
+
+        expression = GetConversionToMaskType(member.MaskType, expression);
+        if (!string.IsNullOrEmpty(member.Converter))
+        {
+            expression = $"{member.Converter}({expression})";
+        }
+        return expression;
+    }
+
+    public static string GetPayloadMemberFormatter(
+        PayloadMemberInfo member,
+        string expression,
+        PayloadType payloadType,
+        bool assigned)
+    {
+        if (!string.IsNullOrEmpty(member.Converter))
+        {
+            expression = $"{member.Converter}({expression})";
+        }
+        var isBoolean = member.MaskType == "bool";
+        var payloadInterfaceType = GetInterfaceType(payloadType);
+        if (!string.IsNullOrEmpty(member.MaskType))
+        {
+            if (isBoolean) expression = $"({expression} ? 1 : 0)";
+            else expression = $"({payloadInterfaceType}){expression}";
+        }
+        if (member.Mask.HasValue)
+        {
+            var mask = member.Mask.Value;
+            var shift = GetMaskShift(mask);
+            if (shift > 0)
+            {
+                expression = $"({expression} << {shift})";
+            }
+
+            expression = $"({payloadInterfaceType})({expression} & 0x{mask.ToString("X")})";
+        }
+        else if (isBoolean)
+        {
+            expression = $"({payloadInterfaceType}){expression}";
+        }
+        
+        if (member.Mask.HasValue && assigned)
+        {
+            return $" |= {expression}";
+        }
+        else return $" = {expression}";
+    }
+}
+#>
