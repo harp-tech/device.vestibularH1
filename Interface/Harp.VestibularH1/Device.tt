@@ -83,7 +83,7 @@ namespace <#= namespaceName #>
         /// <returns>The observable sequence of Harp messages produced by the device.</returns>
         public IObservable<HarpMessage> Generate()
         {
-            return Generate(Observable.Empty<HarpMessage>());
+            return device.Generate();
         }
 
         /// <summary>

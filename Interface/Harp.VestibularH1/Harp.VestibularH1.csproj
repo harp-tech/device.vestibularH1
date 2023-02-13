@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <HarpFirmwarePath>..\..\..\Firmware\VestibularH1</HarpFirmwarePath>
+    <HarpFirmwarePath>..\..\Firmware\VestibularH1</HarpFirmwarePath>
   </PropertyGroup>
 
   <ItemGroup>

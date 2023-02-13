@@ -83,6 +83,7 @@ registers:
     address: 46
     registerType: Event
     payloadType: S16
+    payloadLength: 6
 bitMasks:
   StartStopFlags:
     description: Bitmask describing the enable or disable commands to send to the cameras.

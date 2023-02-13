@@ -37,7 +37,7 @@ namespace Harp.VestibularH1
         /// <returns>The observable sequence of Harp messages produced by the device.</returns>
         public IObservable<HarpMessage> Generate()
         {
-            return Generate(Observable.Empty<HarpMessage>());
+            return device.Generate();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Harp.VestibularH1
     /// </summary>
     [DesignTimeVisible(false)]
     [Description("Filters and selects a sequence of event messages from register OpticalTrackingRead.")]
-    public partial class OpticalTrackingRead : Combinator<HarpMessage, short>
+    public partial class OpticalTrackingRead : Combinator<HarpMessage, short[]>
     {
         /// <summary>
         /// Filters and selects an observable sequence of event messages
@@ -158,12 +158,12 @@ namespace Harp.VestibularH1
         /// </summary>
         /// <param name="source">The sequence of Harp event messages.</param>
         /// <returns>
-        /// A sequence of <see cref="short"/> objects representing the
+        /// A sequence of <see cref="short[]"/> objects representing the
         /// register payload.
         /// </returns>
-        public override IObservable<short> Process(IObservable<HarpMessage> source)
+        public override IObservable<short[]> Process(IObservable<HarpMessage> source)
         {
-            return source.Event(address: 46).Select(input => input.GetPayloadInt16());
+            return source.Event(address: 46).Select(input => input.GetPayloadArray<short>());
         }
     }
 

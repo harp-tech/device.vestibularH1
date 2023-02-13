@@ -75,7 +75,7 @@ public static class TemplateHelper
     {
         if (register.PayloadSpec != null) return $"{name}Payload";
         else if (!string.IsNullOrEmpty(register.MaskType)) return register.MaskType;
-        else return GetInterfaceType(register.PayloadType);
+        else return GetInterfaceType(register.PayloadType, register.PayloadLength);
     }
 
     public static string GetInterfaceType(PayloadType payloadType)
