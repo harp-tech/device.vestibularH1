@@ -1,44 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Title>VestibularH1</Title>
-    <Description>Bonsai Library containing interfaces for data acquisition and control of devices implementing the Harp protocol.</Description>
+    <Title>Harp.VestibularH1</Title>
+    <Authors></Authors>
+    <Copyright>Copyright © harp-tech 2023</Copyright>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <Description>Bonsai Library containing interfaces for data acquisition and control of Harp VestibularH1 devices.</Description>
     <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
-    <PackageTags>Bonsai Rx Harp Hardware Protocol</PackageTags>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageTags>Harp VestibularH1 Bonsai Rx</PackageTags>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageIcon></PackageIcon>
+    <PackageOutputPath></PackageOutputPath>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <VersionPrefix>0.1.0</VersionPrefix>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <HarpFirmwarePath>..\..\Firmware\VestibularH1</HarpFirmwarePath>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bonsai.Harp" Version="3.4.0" GeneratePathProperty="true" />
-    <PackageReference Include="YamlDotNet" Version="12.3.1" GeneratePathProperty="true">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Harp.tt" />
-    <None Update="Device.tt">
-      <LastGenOutput>Device.Interface.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Device.Interface.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Device.tt</DependentUpon>
-    </Compile>
+    <PackageReference Include="Bonsai.Harp" Version="3.5.0-build032701" />
   </ItemGroup>
 
 </Project>
