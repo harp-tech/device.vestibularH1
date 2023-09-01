@@ -10,8 +10,8 @@
 #define ADD_R_HW_VERSION_H      0x01    // U8
 #define ADD_R_HW_VERSION_L      0x02    // U8
 #define ADD_R_ASSEMBLY_VERSION  0x03    // U8
-#define ADD_R_HARP_VERSION_H    0x04    // U8
-#define ADD_R_HARP_VERSION_L    0x05    // U8
+#define ADD_R_CORE_VERSION_H    0x04    // U8
+#define ADD_R_CORE_VERSION_L    0x05    // U8
 #define ADD_R_FW_VERSION_H      0x06    // U8
 #define ADD_R_FW_VERSION_L      0x07    // U8
 #define ADD_R_TIMESTAMP_SECOND  0x08    // U32
