@@ -91,10 +91,12 @@ void core_callback_initialize_hardware(void)
 	if (optical_tracking_initialize_flow0() == true) flow0_used = FLOW_USED_PAA5100JE;
 	if (optical_tracking_initialize_flow1() == true) flow1_used = FLOW_USED_PAA5100JE;
 	
+	/* Check if PMW3360 is connected */
+	if (flow0_used == FLOW_USED_NONE) spi_mode3_initialize_flow0();
+	if (flow1_used == FLOW_USED_NONE) spi_mode3_initialize_flow1();
 	
-	/* Initialize the optical tracking devices */
-	optical_tracking_initialize_flow0();
-	optical_tracking_initialize_flow1();
+	if (flow0_used == FLOW_USED_NONE) if (optical_tracking_initialize_pwm3360_0() == true) flow0_used = FLOW_USED_PMW3360;
+	if (flow1_used == FLOW_USED_NONE) if (optical_tracking_initialize_pwm3360_1() == true) flow1_used = FLOW_USED_PMW3360;
 }
 
 void core_callback_reset_registers(void)
