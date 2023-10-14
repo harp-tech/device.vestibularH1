@@ -8,6 +8,7 @@
 
 #include "spi.h"
 #include "PAA5100JE.h"
+#include "PMW3360.h"
 
 /************************************************************************/
 /* Declare application registers                                        */
@@ -65,11 +66,19 @@ void core_callback_catastrophic_error_detected(void)
 /************************************************************************/
 /* Initialization Callbacks                                             */
 /************************************************************************/
+#define FLOW_USED_NONE 0
+#define FLOW_USED_PAA5100JE 1
+#define FLOW_USED_PMW3360 2
+
+uint8_t flow0_used = FLOW_USED_NONE;
+uint8_t flow1_used = FLOW_USED_NONE;
+
 void core_callback_define_clock_default(void)
 {
 	/* By default, the device will be used as a clock repeater */
 	core_device_to_clock_repeater();
 }
+uint16_t cpi_;
 
 void core_callback_initialize_hardware(void)
 {
@@ -77,13 +86,24 @@ void core_callback_initialize_hardware(void)
 	/* Don't delete this function!!! */
 	init_ios();
 	
-	/* Initialize spi on port C */
-	spi_initialize_flow0();
-	spi_initialize_flow1();
+	/* Check if PAA5100JE is connected */
+	spi_mode0_initialize_flow0();
+	spi_mode0_initialize_flow1();
+	if (optical_tracking_initialize_flow0() == true) flow0_used = FLOW_USED_PAA5100JE;
+	if (optical_tracking_initialize_flow1() == true) flow1_used = FLOW_USED_PAA5100JE;
 	
-	/* Initialize the optical tracking devices */
-	optical_tracking_initialize_flow0();
-	optical_tracking_initialize_flow1();
+	/* Check if PMW3360 is connected */
+	if (flow0_used == FLOW_USED_NONE) spi_mode3_initialize_flow0();
+	if (flow1_used == FLOW_USED_NONE) spi_mode3_initialize_flow1();
+	
+	if (flow0_used == FLOW_USED_NONE) if (optical_tracking_initialize_pwm3360_0() == true) flow0_used = FLOW_USED_PMW3360;
+	if (flow1_used == FLOW_USED_NONE) if (optical_tracking_initialize_pwm3360_1() == true) flow1_used = FLOW_USED_PMW3360;
+	
+	/* If PMW3360 is connected to port 0 */
+	//set_cpi_pmw3360_0(12000); // Default is 5000
+	
+	/* If PMW3360 is connected to port 1 */
+	//set_cpi_pmw3360_1(12000); // Default it 5000
 }
 
 void core_callback_reset_registers(void)
@@ -206,7 +226,14 @@ void core_callback_t_1ms(void)
 		Motion optical_motion_flow0;
 		Motion optical_motion_flow1;
 		
-		optical_tracking_read_motion_optimized(&optical_motion_flow0, &optical_motion_flow1);
+		if (flow0_used == FLOW_USED_PAA5100JE)
+		{
+			optical_tracking_read_motion_optimized(&optical_motion_flow0, &optical_motion_flow1);
+		}
+		if (flow0_used == FLOW_USED_PMW3360)
+		{
+			optical_tracking_read_motion_optimized_pmw3360(&optical_motion_flow0, &optical_motion_flow1);
+		}		
 		
 		memcpy(app_regs.REG_REG_OPTICAL_TRACKING_READ+0, ((uint8_t*)(&optical_motion_flow0))+2,5);
 		memcpy(app_regs.REG_REG_OPTICAL_TRACKING_READ+3, ((uint8_t*)(&optical_motion_flow1))+2,5);

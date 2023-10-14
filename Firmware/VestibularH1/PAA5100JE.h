@@ -1,6 +1,7 @@
 #ifndef _PAA5100JE_H_
 #define _PAA5100JE_H_
 #include "cpu.h"
+#include "MotionHeader.h"
 
 
 #define PRODUCT_ID_REG_ADD 0x00
@@ -12,14 +13,6 @@
 #define MOTION_BURST_REG_ADD 0x16
 #define POWER_UP_RESET_REG_ADD 0x3A
 #define INVERSE_PRODUCT_ID_REG_ADD 0x5F
-
-
-typedef struct Motion {
-	uint8_t dummy[2];
-	int16_t deltaA;
-	int16_t deltaB;
-	uint8_t Squal;
-} Motion;
 
 
 bool optical_tracking_initialize_flow0(void);
