@@ -61,7 +61,10 @@ uint8_t app_regs_type[] = {
 	TYPE_U8,
 	TYPE_U8,
 	TYPE_U8,
-	TYPE_I16
+	TYPE_I16,
+	TYPE_U8,
+	TYPE_U8,
+	TYPE_U16
 };
 
 uint16_t app_regs_n_elements[] = {
@@ -79,7 +82,10 @@ uint16_t app_regs_n_elements[] = {
 	1,
 	1,
 	1,
-	6
+	6,
+	1,
+	1,
+	1
 };
 
 uint8_t *app_regs_pointer[] = {
@@ -97,5 +103,8 @@ uint8_t *app_regs_pointer[] = {
 	(uint8_t*)(&app_regs.REG_OUT_CLEAR),
 	(uint8_t*)(&app_regs.REG_OUT_TOGGLE),
 	(uint8_t*)(&app_regs.REG_OUT_WRITE),
-	(uint8_t*)(app_regs.REG_REG_OPTICAL_TRACKING_READ)
+	(uint8_t*)(app_regs.REG_REG_OPTICAL_TRACKING_READ),
+	(uint8_t*)(&app_regs.REG_PRODUCT_ID_PORT0),
+	(uint8_t*)(&app_regs.REG_PRODUCT_ID_PORT1),
+	(uint8_t*)(&app_regs.REG_CPI)
 };
