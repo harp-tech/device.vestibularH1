@@ -219,7 +219,7 @@ void core_callback_t_1ms(void)
 		Motion optical_motion_flow0;
 		Motion optical_motion_flow1;
 		
-		if (flow0_used == FLOW_USED_NONE)
+		if (flow0_used == FLOW_USED_PAA5100JE)
 		{
 			optical_tracking_read_motion_optimized(&optical_motion_flow0, &optical_motion_flow1);
 		}
