@@ -673,11 +673,11 @@ void optical_tracking_write_register_pmw3360_0(uint8_t address, uint8_t byte)
 	//_delay_us(1);
 	//_delay_us(10);
 	spi_tx_byte_flow0(byte);
-	_delay_us(20);								// Increased to 20 microseconds
-	_delay_us(1);								// Increased to 20 microseconds
+	_delay_us(20);
+	_delay_us(1);
 	spi_stop_flow0();
 	
-	_delay_us(100);							// Added this delay
+	_delay_us(20);
 }
 
 void optical_tracking_write_register_pmw3360_1(uint8_t address, uint8_t byte)
@@ -691,9 +691,9 @@ void optical_tracking_write_register_pmw3360_1(uint8_t address, uint8_t byte)
 	//_delay_us(1);
 	//_delay_us(10);
 	spi_tx_byte_flow1(byte);
-	_delay_us(20);								// Increased to 20 microseconds
-	_delay_us(1);								// Increased to 20 microseconds
+	_delay_us(20);
+	_delay_us(1);
 	spi_stop_flow1();
 	
-	_delay_us(100);							// Added this delay
+	_delay_us(20);
 }
