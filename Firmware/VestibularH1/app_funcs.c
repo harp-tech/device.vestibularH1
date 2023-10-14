@@ -1,6 +1,7 @@
 #include "app_funcs.h"
 #include "app_ios_and_regs.h"
 #include "hwbp_core.h"
+#include "PMW3360.h"
 
 
 /************************************************************************/
@@ -473,5 +474,11 @@ bool app_write_REG_PRODUCT_ID_PORT1(void *a)
 void app_read_REG_CPI(void) {}
 bool app_write_REG_CPI(void *a)
 {
-	return false;
+	uint16_t reg = *((uint16_t*)a);
+	
+	set_cpi_pmw3360_0(reg);
+	set_cpi_pmw3360_1(reg);
+	
+	app_regs.REG_CPI = reg;
+	return true;
 }
