@@ -1,16 +1,27 @@
 #include "spi.h"
 #include "app_ios_and_regs.h"
 
-void spi_initialize_flow0(void)
+void spi_mode0_initialize_flow0(void)
 {
 	/* Initialize SPI with 2MHz */
-	SPIC_CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_0_gc /*| SPI_CLK2X_bm*/ | SPI_PRESCALER_DIV16_gc;
+	SPIC_CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_0_gc /*| SPI_CLK2X_bm*/ | SPI_PRESCALER_DIV128_gc;
+}
+void spi_mode3_initialize_flow0(void)
+{
+	/* Initialize SPI with 2MHz */
+	SPIC_CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_3_gc /*| SPI_CLK2X_bm*/ | SPI_PRESCALER_DIV128_gc;
 }
 
-void spi_initialize_flow1(void)
+void spi_mode0_initialize_flow1(void)
 {
 	/* Initialize SPI with 2MHz */
 	SPID_CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_0_gc /*| SPI_CLK2X_bm*/ | SPI_PRESCALER_DIV16_gc;
+}
+
+void spi_mode3_initialize_flow1(void)
+{
+	/* Initialize SPI with 2MHz */
+	SPID_CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_3_gc /*| SPI_CLK2X_bm*/ | SPI_PRESCALER_DIV16_gc;
 }
 
 void spi_start_flow0(void)

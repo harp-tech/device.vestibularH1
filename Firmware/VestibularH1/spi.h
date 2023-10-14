@@ -5,6 +5,11 @@
 void spi_initialize_flow0(void);
 void spi_initialize_flow1(void);
 
+void spi_mode0_initialize_flow0(void);
+void spi_mode3_initialize_flow0(void);
+void spi_mode0_initialize_flow1(void);
+void spi_mode3_initialize_flow1(void);
+
 void spi_start_flow0(void);
 void spi_start_flow1(void);
 

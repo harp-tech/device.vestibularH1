@@ -8,6 +8,7 @@
 
 #include "spi.h"
 #include "PAA5100JE.h"
+#include "PMW3360.h"
 
 /************************************************************************/
 /* Declare application registers                                        */
@@ -65,6 +66,13 @@ void core_callback_catastrophic_error_detected(void)
 /************************************************************************/
 /* Initialization Callbacks                                             */
 /************************************************************************/
+#define FLOW_USED_NONE 0
+#define FLOW_USED_PAA5100JE 1
+#define FLOW_USED_PMW3360 2
+
+uint8_t flow0_used = FLOW_USED_NONE;
+uint8_t flow1_used = FLOW_USED_NONE;
+
 void core_callback_define_clock_default(void)
 {
 	/* By default, the device will be used as a clock repeater */
@@ -77,9 +85,12 @@ void core_callback_initialize_hardware(void)
 	/* Don't delete this function!!! */
 	init_ios();
 	
-	/* Initialize spi on port C */
-	spi_initialize_flow0();
-	spi_initialize_flow1();
+	/* Check if PAA5100JE is connected */
+	spi_mode0_initialize_flow0();
+	spi_mode0_initialize_flow1();
+	if (optical_tracking_initialize_flow0() == true) flow0_used = FLOW_USED_PAA5100JE;
+	if (optical_tracking_initialize_flow1() == true) flow1_used = FLOW_USED_PAA5100JE;
+	
 	
 	/* Initialize the optical tracking devices */
 	optical_tracking_initialize_flow0();
@@ -206,7 +217,10 @@ void core_callback_t_1ms(void)
 		Motion optical_motion_flow0;
 		Motion optical_motion_flow1;
 		
-		optical_tracking_read_motion_optimized(&optical_motion_flow0, &optical_motion_flow1);
+		if (flow0_used == FLOW_USED_NONE)
+		{
+			optical_tracking_read_motion_optimized(&optical_motion_flow0, &optical_motion_flow1);
+		}
 		
 		memcpy(app_regs.REG_REG_OPTICAL_TRACKING_READ+0, ((uint8_t*)(&optical_motion_flow0))+2,5);
 		memcpy(app_regs.REG_REG_OPTICAL_TRACKING_READ+3, ((uint8_t*)(&optical_motion_flow1))+2,5);
