@@ -10,7 +10,7 @@ bool optical_tracking_initialize_flow0(void)
 {
 	/* Power up and reset */
 	optical_tracking_write_register_flow0(POWER_UP_RESET_REG_ADD, 0x5A);
-	_delay_us(10);
+	_delay_ms(100);
 	
 	/* Check if the right IC is present */
 	uint8_t productID = optical_tracking_read_register_flow0(PRODUCT_ID_REG_ADD);
@@ -37,7 +37,7 @@ bool optical_tracking_initialize_flow1(void)
 {
 	/* Power up and reset */
 	optical_tracking_write_register_flow1(POWER_UP_RESET_REG_ADD, 0x5A);
-	_delay_us(10);
+	_delay_ms(100);;
 	
 	/* Check if the right IC is present */
 	uint8_t productID = optical_tracking_read_register_flow1(PRODUCT_ID_REG_ADD);
