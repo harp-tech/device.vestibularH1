@@ -6,6 +6,10 @@
 #include <util/delay.h>
 
 Motion th;
+
+extern uint8_t prodIdPort0;
+extern uint8_t prodIdPort1;
+
 bool optical_tracking_initialize_flow0(void)
 {
 	/* Power up and reset */
@@ -18,6 +22,8 @@ bool optical_tracking_initialize_flow0(void)
 	
 	if (productID != 0x49 || invProductID != 0xB6)
 		return false;
+	else
+		prodIdPort0 = 0x49;
 	
 	/* Read the data registers */
 	optical_tracking_read_register_flow0(MOTION_REG_ADD);
@@ -45,6 +51,8 @@ bool optical_tracking_initialize_flow1(void)
 	
 	if (productID != 0x49 || invProductID != 0xB6)
 		return false;
+	else
+		prodIdPort1 = 0x49;
 	
 	/* Read the data registers */
 	optical_tracking_read_register_flow1(MOTION_REG_ADD);

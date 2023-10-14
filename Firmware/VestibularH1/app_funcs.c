@@ -439,7 +439,10 @@ bool app_write_REG_REG_OPTICAL_TRACKING_READ(void *a)
 /************************************************************************/
 uint8_t prodIdPort0;
 
-void app_read_REG_PRODUCT_ID_PORT0(void) {}
+void app_read_REG_PRODUCT_ID_PORT0(void)
+{
+	app_regs.REG_PRODUCT_ID_PORT0 = prodIdPort0;
+}
 bool app_write_REG_PRODUCT_ID_PORT0(void *a)
 {
 	return false;
@@ -450,9 +453,12 @@ bool app_write_REG_PRODUCT_ID_PORT0(void *a)
 /************************************************************************/
 /* REG_PRODUCT_ID_PORT1                                                 */
 /************************************************************************/
-uint8_t prodIdPort0;
+uint8_t prodIdPort1;
 
-void app_read_REG_PRODUCT_ID_PORT1(void) {}
+void app_read_REG_PRODUCT_ID_PORT1(void)
+{
+	app_regs.REG_PRODUCT_ID_PORT1 = prodIdPort1;
+}
 bool app_write_REG_PRODUCT_ID_PORT1(void *a)
 {
 	return false;
