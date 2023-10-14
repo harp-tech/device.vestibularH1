@@ -1,6 +1,8 @@
 #ifndef _PMW3360_H_
 #define _PMW3360_H_
 #include "cpu.h"
+#include "MotionHeader.h"
+
 
 #define REG_Product_ID  0x00
 #define REG_Revision_ID 0x01
@@ -55,6 +57,19 @@
 
 bool optical_tracking_initialize_pwm3360_0(void);
 bool optical_tracking_initialize_pwm3360_1(void);
+
+void upload_the_firmware_pmw3360_0(void);
+void upload_the_firmware_pmw3360_1(void);
+
+uint8_t check_signatures_pmw3360_0(bool check_srom);
+uint8_t check_signatures_pmw3360_1(bool check_srom);
+
+void set_cpi_pmw3360_0 (uint32_t cpi);
+void set_cpi_pmw3360_1 (uint32_t cpi);
+uint16_t get_cpi_pmw3360_0 (void);
+uint16_t get_cpi_pmw3360_1 (void);
+
+void optical_tracking_read_motion_optimized_pmw3360(Motion motion_flow0[], Motion motion_flow1[]);
 
 uint8_t optical_tracking_read_register_pwm3360_0(uint8_t address);
 uint8_t optical_tracking_read_register_pwm3360_1(uint8_t address);
