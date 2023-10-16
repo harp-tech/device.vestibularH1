@@ -10,7 +10,8 @@ uint8_t productID;
 uint8_t invProductID;
 uint8_t sromID;
 
-uint16_t	cpi;
+extern uint8_t prodIdPort0;
+extern uint8_t prodIdPort1;
 
 bool optical_tracking_initialize_pwm3360_0(void)
 {
@@ -32,6 +33,8 @@ bool optical_tracking_initialize_pwm3360_0(void)
 	uint8_t prodID = check_signatures_pmw3360_0(false);
 	if (prodID == 0)
 		return false;
+	else
+		prodIdPort0 = prodID;
 	
 	/* Read the data registers */
 	optical_tracking_read_register_pwm3360_0(REG_Motion);
@@ -73,7 +76,9 @@ bool optical_tracking_initialize_pwm3360_1(void)
 	/* Check if the right IC is present */
 	uint8_t prodID = check_signatures_pmw3360_1(false);
 	if (prodID == 0)
-	return false;
+		return false;
+	else
+		prodIdPort1 = prodID;
 	
 	/* Read the data registers */
 	optical_tracking_read_register_pwm3360_1(REG_Motion);
@@ -668,11 +673,11 @@ void optical_tracking_write_register_pmw3360_0(uint8_t address, uint8_t byte)
 	//_delay_us(1);
 	//_delay_us(10);
 	spi_tx_byte_flow0(byte);
-	_delay_us(20);								// Increased to 20 microseconds
-	_delay_us(1);								// Increased to 20 microseconds
+	_delay_us(20);
+	_delay_us(1);
 	spi_stop_flow0();
 	
-	_delay_us(100);							// Added this delay
+	_delay_us(20);
 }
 
 void optical_tracking_write_register_pmw3360_1(uint8_t address, uint8_t byte)
@@ -686,9 +691,9 @@ void optical_tracking_write_register_pmw3360_1(uint8_t address, uint8_t byte)
 	//_delay_us(1);
 	//_delay_us(10);
 	spi_tx_byte_flow1(byte);
-	_delay_us(20);								// Increased to 20 microseconds
-	_delay_us(1);								// Increased to 20 microseconds
+	_delay_us(20);
+	_delay_us(1);
 	spi_stop_flow1();
 	
-	_delay_us(100);							// Added this delay
+	_delay_us(20);
 }

@@ -114,6 +114,9 @@ typedef struct
 	uint8_t REG_OUT_TOGGLE;
 	uint8_t REG_OUT_WRITE;
 	int16_t REG_REG_OPTICAL_TRACKING_READ[6];
+	uint8_t REG_PRODUCT_ID_PORT0;
+	uint8_t REG_PRODUCT_ID_PORT1;
+	uint16_t REG_CPI;
 } AppRegs;
 
 /************************************************************************/
@@ -135,6 +138,9 @@ typedef struct
 #define ADD_REG_OUT_TOGGLE                  44 // U8     Bitmask to toggle the digital ouputs
 #define ADD_REG_OUT_WRITE                   45 // U8     Bitmask to write the digital ouputs
 #define ADD_REG_REG_OPTICAL_TRACKING_READ   46 // I16    
+#define ADD_REG_PRODUCT_ID_PORT0            47 // U8     Contains de flow meter ID connected to Port 0
+#define ADD_REG_PRODUCT_ID_PORT1            48 // U8     Contains de flow meter ID connected to Port 1
+#define ADD_REG_CPI                         49 // U16    Configures the counts per inch for both channels (PMW3360 only)
 
 /************************************************************************/
 /* PWM Generator registers' memory limits                               */
@@ -144,15 +150,13 @@ typedef struct
 /************************************************************************/
 /* Memory limits */
 #define APP_REGS_ADD_MIN                    0x20
-#define APP_REGS_ADD_MAX                    0x2E
-#define APP_NBYTES_OF_REG_BANK              30
+#define APP_REGS_ADD_MAX                    0x31
+#define APP_NBYTES_OF_REG_BANK              34
 
 /************************************************************************/
 /* Registers' bits                                                      */
 /************************************************************************/
 #define B_TRIGGER                          (1<<0)       // A trigger was sent to camera
-#define MSK_STROBE_DIRECT                  0            // Selects the direct line
-#define MSK_STROBE_PULL_UP                 1            // Selects the pull-up line
 #define B_START_CAM0                       (1<<0)       // 
 #define B_START_CAM1                       (1<<1)       // 
 #define B_STOP_CAM0                        (1<<2)       // 

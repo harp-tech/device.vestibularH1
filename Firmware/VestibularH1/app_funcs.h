@@ -35,6 +35,9 @@ void app_read_REG_OUT_CLEAR(void);
 void app_read_REG_OUT_TOGGLE(void);
 void app_read_REG_OUT_WRITE(void);
 void app_read_REG_REG_OPTICAL_TRACKING_READ(void);
+void app_read_REG_PRODUCT_ID_PORT0(void);
+void app_read_REG_PRODUCT_ID_PORT1(void);
+void app_read_REG_CPI(void);
 
 bool app_write_REG_CAM0_EVENT(void *a);
 bool app_write_REG_CAM1_EVENT(void *a);
@@ -51,6 +54,9 @@ bool app_write_REG_OUT_CLEAR(void *a);
 bool app_write_REG_OUT_TOGGLE(void *a);
 bool app_write_REG_OUT_WRITE(void *a);
 bool app_write_REG_REG_OPTICAL_TRACKING_READ(void *a);
+bool app_write_REG_PRODUCT_ID_PORT0(void *a);
+bool app_write_REG_PRODUCT_ID_PORT1(void *a);
+bool app_write_REG_CPI(void *a);
 
 
 #endif /* _APP_FUNCTIONS_H_ */

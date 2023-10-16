@@ -1,6 +1,7 @@
 #include "app_funcs.h"
 #include "app_ios_and_regs.h"
 #include "hwbp_core.h"
+#include "PMW3360.h"
 
 
 /************************************************************************/
@@ -23,7 +24,10 @@ void (*app_func_rd_pointer[])(void) = {
 	&app_read_REG_OUT_CLEAR,
 	&app_read_REG_OUT_TOGGLE,
 	&app_read_REG_OUT_WRITE,
-	&app_read_REG_REG_OPTICAL_TRACKING_READ
+	&app_read_REG_REG_OPTICAL_TRACKING_READ,
+	&app_read_REG_PRODUCT_ID_PORT0,
+	&app_read_REG_PRODUCT_ID_PORT1,
+	&app_read_REG_CPI
 };
 
 bool (*app_func_wr_pointer[])(void*) = {
@@ -41,7 +45,10 @@ bool (*app_func_wr_pointer[])(void*) = {
 	&app_write_REG_OUT_CLEAR,
 	&app_write_REG_OUT_TOGGLE,
 	&app_write_REG_OUT_WRITE,
-	&app_write_REG_REG_OPTICAL_TRACKING_READ
+	&app_write_REG_REG_OPTICAL_TRACKING_READ,
+	&app_write_REG_PRODUCT_ID_PORT0,
+	&app_write_REG_PRODUCT_ID_PORT1,
+	&app_write_REG_CPI
 };
 
 
@@ -423,4 +430,55 @@ void app_read_REG_REG_OPTICAL_TRACKING_READ(void) {}
 bool app_write_REG_REG_OPTICAL_TRACKING_READ(void *a)
 {
 	return false;
+}
+
+
+
+
+/************************************************************************/
+/* REG_PRODUCT_ID_PORT0                                                 */
+/************************************************************************/
+uint8_t prodIdPort0;
+
+void app_read_REG_PRODUCT_ID_PORT0(void)
+{
+	app_regs.REG_PRODUCT_ID_PORT0 = prodIdPort0;
+}
+bool app_write_REG_PRODUCT_ID_PORT0(void *a)
+{
+	return false;
+}
+
+
+
+/************************************************************************/
+/* REG_PRODUCT_ID_PORT1                                                 */
+/************************************************************************/
+uint8_t prodIdPort1;
+
+void app_read_REG_PRODUCT_ID_PORT1(void)
+{
+	app_regs.REG_PRODUCT_ID_PORT1 = prodIdPort1;
+}
+bool app_write_REG_PRODUCT_ID_PORT1(void *a)
+{
+	return false;
+}
+
+
+
+
+/************************************************************************/
+/* REG_CPI                                                              */
+/************************************************************************/
+void app_read_REG_CPI(void) {}
+bool app_write_REG_CPI(void *a)
+{
+	uint16_t reg = *((uint16_t*)a);
+	
+	set_cpi_pmw3360_0(reg);
+	set_cpi_pmw3360_1(reg);
+	
+	app_regs.REG_CPI = reg;
+	return true;
 }
