@@ -111,12 +111,12 @@ namespace Harp.VestibularH1
     [XmlInclude(typeof(OutWrite))]
     [XmlInclude(typeof(OpticalTrackingRead))]
     [Description("Filters register-specific messages reported by the VestibularH1 device.")]
-    public class FilterMessage : FilterMessageBuilder, INamedElement
+    public class FilterRegister : FilterRegisterBuilder, INamedElement
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FilterMessage"/> class.
+        /// Initializes a new instance of the <see cref="FilterRegister"/> class.
         /// </summary>
-        public FilterMessage()
+        public FilterRegister()
         {
             Register = new Cam0Event();
         }
@@ -1717,6 +1717,21 @@ namespace Harp.VestibularH1
     [XmlInclude(typeof(CreateOutTogglePayload))]
     [XmlInclude(typeof(CreateOutWritePayload))]
     [XmlInclude(typeof(CreateOpticalTrackingReadPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam0EventPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam1EventPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam0TriggerFrequencyPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam0TriggerDurationPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam1TriggerFrequencyPayload))]
+    [XmlInclude(typeof(CreateTimestampedCam1TriggerDurationPayload))]
+    [XmlInclude(typeof(CreateTimestampedStartAndStopPayload))]
+    [XmlInclude(typeof(CreateTimestampedInStatePayload))]
+    [XmlInclude(typeof(CreateTimestampedValve0PulsePayload))]
+    [XmlInclude(typeof(CreateTimestampedValve1PulsePayload))]
+    [XmlInclude(typeof(CreateTimestampedOutSetPayload))]
+    [XmlInclude(typeof(CreateTimestampedOutClearPayload))]
+    [XmlInclude(typeof(CreateTimestampedOutTogglePayload))]
+    [XmlInclude(typeof(CreateTimestampedOutWritePayload))]
+    [XmlInclude(typeof(CreateTimestampedOpticalTrackingReadPayload))]
     [Description("Creates standard message payloads for the VestibularH1 device.")]
     public partial class CreateMessage : CreateMessageBuilder, INamedElement
     {
@@ -1732,722 +1747,812 @@ namespace Harp.VestibularH1
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a message payload
     /// that signals when a frame was triggered on camera 0.
     /// </summary>
     [DisplayName("Cam0EventPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that signals when a frame was triggered on camera 0.")]
-    public partial class CreateCam0EventPayload : HarpCombinator
+    [Description("Creates a message payload that signals when a frame was triggered on camera 0.")]
+    public partial class CreateCam0EventPayload
     {
         /// <summary>
         /// Gets or sets the value that signals when a frame was triggered on camera 0.
         /// </summary>
         [Description("The value that signals when a frame was triggered on camera 0.")]
-        public bool Value { get; set; }
+        public bool Cam0Event { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that signals when a frame was triggered on camera 0.
+        /// Creates a message payload for the Cam0Event register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public bool GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam0Event;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that signals when a frame was triggered on camera 0.
+        /// Creates a message that signals when a frame was triggered on camera 0.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam0Event register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam0Event.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam0Event.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that signals when a frame was triggered on camera 0.
+    /// </summary>
+    [DisplayName("TimestampedCam0EventPayload")]
+    [Description("Creates a timestamped message payload that signals when a frame was triggered on camera 0.")]
+    public partial class CreateTimestampedCam0EventPayload : CreateCam0EventPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that signals when a frame was triggered on camera 0.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam0Event register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam0Event.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that signals when a frame was triggered on camera 1.
     /// </summary>
     [DisplayName("Cam1EventPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that signals when a frame was triggered on camera 1.")]
-    public partial class CreateCam1EventPayload : HarpCombinator
+    [Description("Creates a message payload that signals when a frame was triggered on camera 1.")]
+    public partial class CreateCam1EventPayload
     {
         /// <summary>
         /// Gets or sets the value that signals when a frame was triggered on camera 1.
         /// </summary>
         [Description("The value that signals when a frame was triggered on camera 1.")]
-        public bool Value { get; set; }
+        public bool Cam1Event { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that signals when a frame was triggered on camera 1.
+        /// Creates a message payload for the Cam1Event register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public bool GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam1Event;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that signals when a frame was triggered on camera 1.
+        /// Creates a message that signals when a frame was triggered on camera 1.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam1Event register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam1Event.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam1Event.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that signals when a frame was triggered on camera 1.
+    /// </summary>
+    [DisplayName("TimestampedCam1EventPayload")]
+    [Description("Creates a timestamped message payload that signals when a frame was triggered on camera 1.")]
+    public partial class CreateTimestampedCam1EventPayload : CreateCam1EventPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that signals when a frame was triggered on camera 1.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam1Event register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam1Event.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that sets the trigger frequency for camera 0 between 1 and 1000.
     /// </summary>
     [DisplayName("Cam0TriggerFrequencyPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that sets the trigger frequency for camera 0 between 1 and 1000.")]
-    public partial class CreateCam0TriggerFrequencyPayload : HarpCombinator
+    [Description("Creates a message payload that sets the trigger frequency for camera 0 between 1 and 1000.")]
+    public partial class CreateCam0TriggerFrequencyPayload
     {
         /// <summary>
         /// Gets or sets the value that sets the trigger frequency for camera 0 between 1 and 1000.
         /// </summary>
         [Description("The value that sets the trigger frequency for camera 0 between 1 and 1000.")]
-        public ushort Value { get; set; }
+        public ushort Cam0TriggerFrequency { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that sets the trigger frequency for camera 0 between 1 and 1000.
+        /// Creates a message payload for the Cam0TriggerFrequency register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public ushort GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam0TriggerFrequency;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that sets the trigger frequency for camera 0 between 1 and 1000.
+        /// Creates a message that sets the trigger frequency for camera 0 between 1 and 1000.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam0TriggerFrequency register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam0TriggerFrequency.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam0TriggerFrequency.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that sets the trigger frequency for camera 0 between 1 and 1000.
+    /// </summary>
+    [DisplayName("TimestampedCam0TriggerFrequencyPayload")]
+    [Description("Creates a timestamped message payload that sets the trigger frequency for camera 0 between 1 and 1000.")]
+    public partial class CreateTimestampedCam0TriggerFrequencyPayload : CreateCam0TriggerFrequencyPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that sets the trigger frequency for camera 0 between 1 and 1000.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam0TriggerFrequency register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam0TriggerFrequency.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
     /// </summary>
     [DisplayName("Cam0TriggerDurationPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.")]
-    public partial class CreateCam0TriggerDurationPayload : HarpCombinator
+    [Description("Creates a message payload that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.")]
+    public partial class CreateCam0TriggerDurationPayload
     {
         /// <summary>
         /// Gets or sets the value that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
         /// </summary>
         [Description("The value that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.")]
-        public ushort Value { get; set; }
+        public ushort Cam0TriggerDuration { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
+        /// Creates a message payload for the Cam0TriggerDuration register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public ushort GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam0TriggerDuration;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
+        /// Creates a message that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam0TriggerDuration register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam0TriggerDuration.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam0TriggerDuration.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
+    /// </summary>
+    [DisplayName("TimestampedCam0TriggerDurationPayload")]
+    [Description("Creates a timestamped message payload that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.")]
+    public partial class CreateTimestampedCam0TriggerDurationPayload : CreateCam0TriggerDurationPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 0.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam0TriggerDuration register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam0TriggerDuration.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that sets the trigger frequency for camera 1 between 1 and 1000.
     /// </summary>
     [DisplayName("Cam1TriggerFrequencyPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that sets the trigger frequency for camera 1 between 1 and 1000.")]
-    public partial class CreateCam1TriggerFrequencyPayload : HarpCombinator
+    [Description("Creates a message payload that sets the trigger frequency for camera 1 between 1 and 1000.")]
+    public partial class CreateCam1TriggerFrequencyPayload
     {
         /// <summary>
         /// Gets or sets the value that sets the trigger frequency for camera 1 between 1 and 1000.
         /// </summary>
         [Description("The value that sets the trigger frequency for camera 1 between 1 and 1000.")]
-        public ushort Value { get; set; }
+        public ushort Cam1TriggerFrequency { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that sets the trigger frequency for camera 1 between 1 and 1000.
+        /// Creates a message payload for the Cam1TriggerFrequency register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public ushort GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam1TriggerFrequency;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that sets the trigger frequency for camera 1 between 1 and 1000.
+        /// Creates a message that sets the trigger frequency for camera 1 between 1 and 1000.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam1TriggerFrequency register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam1TriggerFrequency.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam1TriggerFrequency.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that sets the trigger frequency for camera 1 between 1 and 1000.
+    /// </summary>
+    [DisplayName("TimestampedCam1TriggerFrequencyPayload")]
+    [Description("Creates a timestamped message payload that sets the trigger frequency for camera 1 between 1 and 1000.")]
+    public partial class CreateTimestampedCam1TriggerFrequencyPayload : CreateCam1TriggerFrequencyPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that sets the trigger frequency for camera 1 between 1 and 1000.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam1TriggerFrequency register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam1TriggerFrequency.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
     /// </summary>
     [DisplayName("Cam1TriggerDurationPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.")]
-    public partial class CreateCam1TriggerDurationPayload : HarpCombinator
+    [Description("Creates a message payload that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.")]
+    public partial class CreateCam1TriggerDurationPayload
     {
         /// <summary>
         /// Gets or sets the value that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
         /// </summary>
         [Description("The value that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.")]
-        public ushort Value { get; set; }
+        public ushort Cam1TriggerDuration { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
+        /// Creates a message payload for the Cam1TriggerDuration register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public ushort GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Cam1TriggerDuration;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
+        /// Creates a message that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Cam1TriggerDuration register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Cam1TriggerDuration.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Cam1TriggerDuration.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
+    /// </summary>
+    [DisplayName("TimestampedCam1TriggerDurationPayload")]
+    [Description("Creates a timestamped message payload that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.")]
+    public partial class CreateTimestampedCam1TriggerDurationPayload : CreateCam1TriggerDurationPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that sets the duration of the trigger pulse (in microseconds, minimum is 100) for camera 1.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Cam1TriggerDuration register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Cam1TriggerDuration.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that starts or stops the cameras immediately.
     /// </summary>
     [DisplayName("StartAndStopPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that starts or stops the cameras immediately.")]
-    public partial class CreateStartAndStopPayload : HarpCombinator
+    [Description("Creates a message payload that starts or stops the cameras immediately.")]
+    public partial class CreateStartAndStopPayload
     {
         /// <summary>
         /// Gets or sets the value that starts or stops the cameras immediately.
         /// </summary>
         [Description("The value that starts or stops the cameras immediately.")]
-        public StartStopFlags Value { get; set; }
+        public StartStopFlags StartAndStop { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that starts or stops the cameras immediately.
+        /// Creates a message payload for the StartAndStop register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public StartStopFlags GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return StartAndStop;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that starts or stops the cameras immediately.
+        /// Creates a message that starts or stops the cameras immediately.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the StartAndStop register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => StartAndStop.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.StartAndStop.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that starts or stops the cameras immediately.
+    /// </summary>
+    [DisplayName("TimestampedStartAndStopPayload")]
+    [Description("Creates a timestamped message payload that starts or stops the cameras immediately.")]
+    public partial class CreateTimestampedStartAndStopPayload : CreateStartAndStopPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that starts or stops the cameras immediately.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the StartAndStop register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.StartAndStop.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that contains the state of the lick ports.
     /// </summary>
     [DisplayName("InStatePayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that contains the state of the lick ports.")]
-    public partial class CreateInStatePayload : HarpCombinator
+    [Description("Creates a message payload that contains the state of the lick ports.")]
+    public partial class CreateInStatePayload
     {
         /// <summary>
         /// Gets or sets the value that contains the state of the lick ports.
         /// </summary>
         [Description("The value that contains the state of the lick ports.")]
-        public PortState Value { get; set; }
+        public PortState InState { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that contains the state of the lick ports.
+        /// Creates a message payload for the InState register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public PortState GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return InState;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that contains the state of the lick ports.
+        /// Creates a message that contains the state of the lick ports.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the InState register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => InState.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.InState.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that contains the state of the lick ports.
+    /// </summary>
+    [DisplayName("TimestampedInStatePayload")]
+    [Description("Creates a timestamped message payload that contains the state of the lick ports.")]
+    public partial class CreateTimestampedInStatePayload : CreateInStatePayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that contains the state of the lick ports.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the InState register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.InState.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that configures the valve 0 open time in milliseconds.
     /// </summary>
     [DisplayName("Valve0PulsePayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that configures the valve 0 open time in milliseconds.")]
-    public partial class CreateValve0PulsePayload : HarpCombinator
+    [Description("Creates a message payload that configures the valve 0 open time in milliseconds.")]
+    public partial class CreateValve0PulsePayload
     {
         /// <summary>
         /// Gets or sets the value that configures the valve 0 open time in milliseconds.
         /// </summary>
         [Description("The value that configures the valve 0 open time in milliseconds.")]
-        public byte Value { get; set; }
+        public byte Valve0Pulse { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that configures the valve 0 open time in milliseconds.
+        /// Creates a message payload for the Valve0Pulse register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public byte GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Valve0Pulse;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that configures the valve 0 open time in milliseconds.
+        /// Creates a message that configures the valve 0 open time in milliseconds.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Valve0Pulse register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Valve0Pulse.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Valve0Pulse.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that configures the valve 0 open time in milliseconds.
+    /// </summary>
+    [DisplayName("TimestampedValve0PulsePayload")]
+    [Description("Creates a timestamped message payload that configures the valve 0 open time in milliseconds.")]
+    public partial class CreateTimestampedValve0PulsePayload : CreateValve0PulsePayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that configures the valve 0 open time in milliseconds.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Valve0Pulse register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Valve0Pulse.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that configures the valve 1 open time in milliseconds.
     /// </summary>
     [DisplayName("Valve1PulsePayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that configures the valve 1 open time in milliseconds.")]
-    public partial class CreateValve1PulsePayload : HarpCombinator
+    [Description("Creates a message payload that configures the valve 1 open time in milliseconds.")]
+    public partial class CreateValve1PulsePayload
     {
         /// <summary>
         /// Gets or sets the value that configures the valve 1 open time in milliseconds.
         /// </summary>
         [Description("The value that configures the valve 1 open time in milliseconds.")]
-        public byte Value { get; set; }
+        public byte Valve1Pulse { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that configures the valve 1 open time in milliseconds.
+        /// Creates a message payload for the Valve1Pulse register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public byte GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return Valve1Pulse;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that configures the valve 1 open time in milliseconds.
+        /// Creates a message that configures the valve 1 open time in milliseconds.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the Valve1Pulse register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => Valve1Pulse.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.Valve1Pulse.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that configures the valve 1 open time in milliseconds.
+    /// </summary>
+    [DisplayName("TimestampedValve1PulsePayload")]
+    [Description("Creates a timestamped message payload that configures the valve 1 open time in milliseconds.")]
+    public partial class CreateTimestampedValve1PulsePayload : CreateValve1PulsePayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that configures the valve 1 open time in milliseconds.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the Valve1Pulse register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.Valve1Pulse.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that bitmask to set the available outputs.
     /// </summary>
     [DisplayName("OutSetPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that bitmask to set the available outputs.")]
-    public partial class CreateOutSetPayload : HarpCombinator
+    [Description("Creates a message payload that bitmask to set the available outputs.")]
+    public partial class CreateOutSetPayload
     {
         /// <summary>
         /// Gets or sets the value that bitmask to set the available outputs.
         /// </summary>
         [Description("The value that bitmask to set the available outputs.")]
-        public byte Value { get; set; }
+        public byte OutSet { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that bitmask to set the available outputs.
+        /// Creates a message payload for the OutSet register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public byte GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return OutSet;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that bitmask to set the available outputs.
+        /// Creates a message that bitmask to set the available outputs.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the OutSet register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => OutSet.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.OutSet.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that bitmask to set the available outputs.
+    /// </summary>
+    [DisplayName("TimestampedOutSetPayload")]
+    [Description("Creates a timestamped message payload that bitmask to set the available outputs.")]
+    public partial class CreateTimestampedOutSetPayload : CreateOutSetPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that bitmask to set the available outputs.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the OutSet register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.OutSet.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that bitmask to clear the available outputs.
     /// </summary>
     [DisplayName("OutClearPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that bitmask to clear the available outputs.")]
-    public partial class CreateOutClearPayload : HarpCombinator
+    [Description("Creates a message payload that bitmask to clear the available outputs.")]
+    public partial class CreateOutClearPayload
     {
         /// <summary>
         /// Gets or sets the value that bitmask to clear the available outputs.
         /// </summary>
         [Description("The value that bitmask to clear the available outputs.")]
-        public byte Value { get; set; }
+        public byte OutClear { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that bitmask to clear the available outputs.
+        /// Creates a message payload for the OutClear register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public byte GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return OutClear;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that bitmask to clear the available outputs.
+        /// Creates a message that bitmask to clear the available outputs.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the OutClear register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => OutClear.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.OutClear.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that bitmask to clear the available outputs.
+    /// </summary>
+    [DisplayName("TimestampedOutClearPayload")]
+    [Description("Creates a timestamped message payload that bitmask to clear the available outputs.")]
+    public partial class CreateTimestampedOutClearPayload : CreateOutClearPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that bitmask to clear the available outputs.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the OutClear register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.OutClear.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that bitmask to toggle the available outputs.
     /// </summary>
     [DisplayName("OutTogglePayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that bitmask to toggle the available outputs.")]
-    public partial class CreateOutTogglePayload : HarpCombinator
+    [Description("Creates a message payload that bitmask to toggle the available outputs.")]
+    public partial class CreateOutTogglePayload
     {
         /// <summary>
         /// Gets or sets the value that bitmask to toggle the available outputs.
         /// </summary>
         [Description("The value that bitmask to toggle the available outputs.")]
-        public byte Value { get; set; }
+        public byte OutToggle { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that bitmask to toggle the available outputs.
+        /// Creates a message payload for the OutToggle register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public byte GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return OutToggle;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that bitmask to toggle the available outputs.
+        /// Creates a message that bitmask to toggle the available outputs.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the OutToggle register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => OutToggle.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.OutToggle.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that bitmask to toggle the available outputs.
+    /// </summary>
+    [DisplayName("TimestampedOutTogglePayload")]
+    [Description("Creates a timestamped message payload that bitmask to toggle the available outputs.")]
+    public partial class CreateTimestampedOutTogglePayload : CreateOutTogglePayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that bitmask to toggle the available outputs.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the OutToggle register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.OutToggle.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// that bitmask to write the available outputs.
     /// </summary>
     [DisplayName("OutWritePayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads that bitmask to write the available outputs.")]
-    public partial class CreateOutWritePayload : HarpCombinator
+    [Description("Creates a message payload that bitmask to write the available outputs.")]
+    public partial class CreateOutWritePayload
     {
         /// <summary>
         /// Gets or sets the value that bitmask to write the available outputs.
         /// </summary>
         [Description("The value that bitmask to write the available outputs.")]
-        public DO Value { get; set; }
+        public DO OutWrite { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// that bitmask to write the available outputs.
+        /// Creates a message payload for the OutWrite register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public DO GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return OutWrite;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// that bitmask to write the available outputs.
+        /// Creates a message that bitmask to write the available outputs.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the OutWrite register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => OutWrite.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.OutWrite.FromPayload(messageType, GetPayload());
         }
     }
 
     /// <summary>
-    /// Represents an operator that creates a sequence of message payloads
+    /// Represents an operator that creates a timestamped message payload
+    /// that bitmask to write the available outputs.
+    /// </summary>
+    [DisplayName("TimestampedOutWritePayload")]
+    [Description("Creates a timestamped message payload that bitmask to write the available outputs.")]
+    public partial class CreateTimestampedOutWritePayload : CreateOutWritePayload
+    {
+        /// <summary>
+        /// Creates a timestamped message that bitmask to write the available outputs.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the OutWrite register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.OutWrite.FromPayload(timestamp, messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a message payload
     /// for register OpticalTrackingRead.
     /// </summary>
     [DisplayName("OpticalTrackingReadPayload")]
-    [WorkflowElementCategory(ElementCategory.Transform)]
-    [Description("Creates a sequence of message payloads for register OpticalTrackingRead.")]
-    public partial class CreateOpticalTrackingReadPayload : HarpCombinator
+    [Description("Creates a message payload for register OpticalTrackingRead.")]
+    public partial class CreateOpticalTrackingReadPayload
     {
         /// <summary>
         /// Gets or sets the value for register OpticalTrackingRead.
         /// </summary>
         [Description("The value for register OpticalTrackingRead.")]
-        public short[] Value { get; set; }
+        public short[] OpticalTrackingRead { get; set; }
 
         /// <summary>
-        /// Creates an observable sequence that contains a single message
-        /// for register OpticalTrackingRead.
+        /// Creates a message payload for the OpticalTrackingRead register.
         /// </summary>
-        /// <returns>
-        /// A sequence containing a single <see cref="HarpMessage"/> object
-        /// representing the created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process()
+        /// <returns>The created message payload value.</returns>
+        public short[] GetPayload()
         {
-            return Process(Observable.Return(System.Reactive.Unit.Default));
+            return OpticalTrackingRead;
         }
 
         /// <summary>
-        /// Creates an observable sequence of message payloads
-        /// for register OpticalTrackingRead.
+        /// Creates a message for register OpticalTrackingRead.
         /// </summary>
-        /// <typeparam name="TSource">
-        /// The type of the elements in the <paramref name="source"/> sequence.
-        /// </typeparam>
-        /// <param name="source">
-        /// The sequence containing the notifications used for emitting message payloads.
-        /// </param>
-        /// <returns>
-        /// A sequence of <see cref="HarpMessage"/> objects representing each
-        /// created message payload.
-        /// </returns>
-        public IObservable<HarpMessage> Process<TSource>(IObservable<TSource> source)
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new message for the OpticalTrackingRead register.</returns>
+        public HarpMessage GetMessage(MessageType messageType)
         {
-            return source.Select(_ => OpticalTrackingRead.FromPayload(MessageType, Value));
+            return Harp.VestibularH1.OpticalTrackingRead.FromPayload(messageType, GetPayload());
+        }
+    }
+
+    /// <summary>
+    /// Represents an operator that creates a timestamped message payload
+    /// for register OpticalTrackingRead.
+    /// </summary>
+    [DisplayName("TimestampedOpticalTrackingReadPayload")]
+    [Description("Creates a timestamped message payload for register OpticalTrackingRead.")]
+    public partial class CreateTimestampedOpticalTrackingReadPayload : CreateOpticalTrackingReadPayload
+    {
+        /// <summary>
+        /// Creates a timestamped message for register OpticalTrackingRead.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the message payload, in seconds.</param>
+        /// <param name="messageType">Specifies the type of the created message.</param>
+        /// <returns>A new timestamped message for the OpticalTrackingRead register.</returns>
+        public HarpMessage GetMessage(double timestamp, MessageType messageType)
+        {
+            return Harp.VestibularH1.OpticalTrackingRead.FromPayload(timestamp, messageType, GetPayload());
         }
     }
 
@@ -2457,6 +2562,7 @@ namespace Harp.VestibularH1
     [Flags]
     public enum StartStopFlags : byte
     {
+        None = 0x0,
         StartCam0 = 0x1,
         StartCam1 = 0x2,
         StopCam0 = 0x4,
@@ -2469,6 +2575,7 @@ namespace Harp.VestibularH1
     [Flags]
     public enum PortState : byte
     {
+        None = 0x0,
         Lick0 = 0x1,
         Lick1 = 0x2,
         Lick0Changed = 0x10,
@@ -2481,6 +2588,7 @@ namespace Harp.VestibularH1
     [Flags]
     public enum DO : byte
     {
+        None = 0x0,
         TriggerCam0 = 0x1,
         TriggerCam1 = 0x2,
         Valve0 = 0x4,
