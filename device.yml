@@ -84,6 +84,51 @@ registers:
     access: Event
     type: S16
     length: 6
+  ProductIdPort0:
+    address: 47
+    access: Read
+    type: U8
+    description: Contains de flow meter ID connected to Port 0.
+  ProductIdPort1:
+    address: 48
+    access: Read
+    type: U8
+    description: Contains de flow meter ID connected to Port 1.
+  CountsPerInch:
+    address: 49
+    access: Read
+    type: U16
+    maxValue: 12000
+    description: Configures the counts per inch of both channels for the PMW3360 with product ID equal to 66.  
+  MotorControlSignalSelection:
+    address: 50
+    access: Read
+    type: U8
+    maxValue: 12000
+    maskType: MotorControlInputSignalSelection
+    description: Select which sensor and axis will be used as the input signal for the motion control algorithm (MCA).
+  MotorControlSignalGain:
+    address: 51
+    access: Read
+    type: Float
+    maxValue: 12000
+    description: Gain to be applied to the input signal.
+  MotorControlZeroThreshold:
+    address: 52
+    access: Read
+    type: U16
+    maxValue: 12000
+    description: Specifies deadband for conversion from speed delta to motor's immediate pulses in microseconds.
+  MotorControlMaxPulseInterval:
+    address: 53
+    access: Read
+    type: U16
+    description: Specifies the maximum of the motor's pulse interval in microseconds.
+  MotorControlMinPulseInterval:
+    address: 54
+    access: Read
+    type: U16
+    description: Specifies the minimum of the motor's pulse interval in microseconds.
 bitMasks:
   StartStopFlags:
     description: Bitmask describing the enable or disable commands to send to the cameras.
@@ -108,3 +153,12 @@ bitMasks:
       Valve1:      0x8
       PulseValve0: 0x10
       PulseValve1: 0x2A
+groupMasks:
+  MotorControlInputSignalSelection:
+    description: Specifies the input signal for the motor control algorithm.
+    values:
+      Disabled: {0, description: Used as a pure digital input.}
+      Flow0X: {1, description: Use flow meter 0, X axis.}
+      Flow0Y: {2, description: Use flow meter 0, Y axis.}
+      Flow1X: {3, description: Use flow meter 1, X axis.}
+      Flow1Y: {4, description: Use flow meter 1, Y axis.}

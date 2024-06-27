@@ -27,7 +27,12 @@ void (*app_func_rd_pointer[])(void) = {
 	&app_read_REG_REG_OPTICAL_TRACKING_READ,
 	&app_read_REG_PRODUCT_ID_PORT0,
 	&app_read_REG_PRODUCT_ID_PORT1,
-	&app_read_REG_CPI
+	&app_read_REG_CPI,
+	&app_read_REG_MCA_SIGNAL_SELECT,
+	&app_read_REG_MCA_SIGNAL_GAIN,
+	&app_read_REG_MCA_ZERO_THRESHOLD,
+	&app_read_REG_MCA_MAX_PULSE_INTERVAL,
+	&app_read_REG_MCA_MIN_PULSE_INTERVAL
 };
 
 bool (*app_func_wr_pointer[])(void*) = {
@@ -48,7 +53,12 @@ bool (*app_func_wr_pointer[])(void*) = {
 	&app_write_REG_REG_OPTICAL_TRACKING_READ,
 	&app_write_REG_PRODUCT_ID_PORT0,
 	&app_write_REG_PRODUCT_ID_PORT1,
-	&app_write_REG_CPI
+	&app_write_REG_CPI,
+	&app_write_REG_MCA_SIGNAL_SELECT,
+	&app_write_REG_MCA_SIGNAL_GAIN,
+	&app_write_REG_MCA_ZERO_THRESHOLD,
+	&app_write_REG_MCA_MAX_PULSE_INTERVAL,
+	&app_write_REG_MCA_MIN_PULSE_INTERVAL
 };
 
 
@@ -480,5 +490,95 @@ bool app_write_REG_CPI(void *a)
 	set_cpi_pmw3360_1(reg);
 	
 	app_regs.REG_CPI = reg;
+	return true;
+}
+
+
+/************************************************************************/
+/* REG_MCA_SIGNAL_SELECT                                                */
+/************************************************************************/
+void app_read_REG_MCA_SIGNAL_SELECT(void)
+{
+	//app_regs.REG_MCA_SIGNAL_SELECT = 0;
+
+}
+
+bool app_write_REG_MCA_SIGNAL_SELECT(void *a)
+{
+	uint8_t reg = *((uint8_t*)a);
+
+	app_regs.REG_MCA_SIGNAL_SELECT = reg;
+	return true;
+}
+
+
+/************************************************************************/
+/* REG_MCA_SIGNAL_GAIN                                                  */
+/************************************************************************/
+void app_read_REG_MCA_SIGNAL_GAIN(void)
+{
+	//app_regs.REG_MCA_SIGNAL_GAIN = 0;
+
+}
+
+bool app_write_REG_MCA_SIGNAL_GAIN(void *a)
+{
+	float reg = *((float*)a);
+
+	app_regs.REG_MCA_SIGNAL_GAIN = reg;
+	return true;
+}
+
+
+/************************************************************************/
+/* REG_MCA_ZERO_THRESHOLD                                               */
+/************************************************************************/
+void app_read_REG_MCA_ZERO_THRESHOLD(void)
+{
+	//app_regs.REG_MCA_ZERO_THRESHOLD = 0;
+
+}
+
+bool app_write_REG_MCA_ZERO_THRESHOLD(void *a)
+{
+	uint16_t reg = *((uint16_t*)a);
+
+	app_regs.REG_MCA_ZERO_THRESHOLD = reg;
+	return true;
+}
+
+
+/************************************************************************/
+/* REG_MCA_MAX_PULSE_INTERVAL                                           */
+/************************************************************************/
+void app_read_REG_MCA_MAX_PULSE_INTERVAL(void)
+{
+	//app_regs.REG_MCA_MAX_PULSE_INTERVAL = 0;
+
+}
+
+bool app_write_REG_MCA_MAX_PULSE_INTERVAL(void *a)
+{
+	uint16_t reg = *((uint16_t*)a);
+
+	app_regs.REG_MCA_MAX_PULSE_INTERVAL = reg;
+	return true;
+}
+
+
+/************************************************************************/
+/* REG_MCA_MIN_PULSE_INTERVAL                                           */
+/************************************************************************/
+void app_read_REG_MCA_MIN_PULSE_INTERVAL(void)
+{
+	//app_regs.REG_MCA_MIN_PULSE_INTERVAL = 0;
+
+}
+
+bool app_write_REG_MCA_MIN_PULSE_INTERVAL(void *a)
+{
+	uint16_t reg = *((uint16_t*)a);
+
+	app_regs.REG_MCA_MIN_PULSE_INTERVAL = reg;
 	return true;
 }
