@@ -119,7 +119,7 @@ typedef struct
 	uint16_t REG_CPI;
 	uint8_t REG_MCA_SIGNAL_SELECT;
 	float REG_MCA_SIGNAL_GAIN;
-	uint16_t REG_MCA_ZERO_THRESHOLD;
+	float REG_MCA_ZERO_THRESHOLD;
 	uint16_t REG_MCA_MAX_PULSE_INTERVAL;
 	uint16_t REG_MCA_MIN_PULSE_INTERVAL;
 } AppRegs;
@@ -148,7 +148,7 @@ typedef struct
 #define ADD_REG_CPI                         49 // U16    Configures the counts per inch for both channels (PMW3360 with prodID=66 only). Maximum is 12000.
 #define ADD_REG_MCA_SIGNAL_SELECT           50 // U8     Select which sensor and axis will be used as the input signal for the motion control algorithm (MCA)
 #define ADD_REG_MCA_SIGNAL_GAIN             51 // FLOAT  Gain to be applied to the input signal
-#define ADD_REG_MCA_ZERO_THRESHOLD          52 // U16    Specifies deadband for conversion from speed delta to motor's immediate pulses in us
+#define ADD_REG_MCA_ZERO_THRESHOLD          52 // FLOAT  Specifies deadband for conversion from speed delta to motor's immediate pulses in us
 #define ADD_REG_MCA_MAX_PULSE_INTERVAL      53 // U16    Specifies the maximum of the motor's pulse interval in us
 #define ADD_REG_MCA_MIN_PULSE_INTERVAL      54 // U16    Specifies the minimum of the motor's pulse interval in us
 
@@ -161,7 +161,7 @@ typedef struct
 /* Memory limits */
 #define APP_REGS_ADD_MIN                    0x20
 #define APP_REGS_ADD_MAX                    0x36
-#define APP_NBYTES_OF_REG_BANK              45
+#define APP_NBYTES_OF_REG_BANK              47
 
 /************************************************************************/
 /* Registers' bits                                                      */
@@ -181,11 +181,11 @@ typedef struct
 #define B_VALVE1                           (1<<3)       // 
 #define B_PULSE_VALVE0                     (1<<4)       // 
 #define B_PULSE_VALVE1                     (1<<5)       // 
-#define GM_MCA_CONFIG                      0x07         // 
-#define MSK_MCA_OFF                        (0<<0)       // 
-#define MSK_MCA_FLOW0_X                    (0<<1)       // 
-#define MSK_MCA_FLOW0_Y                    (0<<2)       // 
-#define MSK_MCA_FLOW1_X                    (0<<3)       // 
-#define MSK_MCA_FLOW1_Y                    (0<<4)       // 
+#define GM_MCA_CONFIG                      7            // 
+#define MSK_MCA_OFF                        0            // 
+#define MSK_MCA_FLOW0_X                    1            // 
+#define MSK_MCA_FLOW0_Y                    2            // 
+#define MSK_MCA_FLOW1_X                    3            // 
+#define MSK_MCA_FLOW1_Y                    4            // 
 
 #endif /* _APP_REGS_H_ */

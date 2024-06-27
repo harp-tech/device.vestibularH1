@@ -67,7 +67,7 @@ uint8_t app_regs_type[] = {
 	TYPE_U16,
 	TYPE_U8,
 	TYPE_FLOAT,
-	TYPE_U16,
+	TYPE_FLOAT,
 	TYPE_U16,
 	TYPE_U16
 };

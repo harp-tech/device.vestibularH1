@@ -476,8 +476,6 @@ bool app_write_REG_PRODUCT_ID_PORT1(void *a)
 }
 
 
-
-
 /************************************************************************/
 /* REG_CPI                                                              */
 /************************************************************************/
@@ -497,12 +495,7 @@ bool app_write_REG_CPI(void *a)
 /************************************************************************/
 /* REG_MCA_SIGNAL_SELECT                                                */
 /************************************************************************/
-void app_read_REG_MCA_SIGNAL_SELECT(void)
-{
-	//app_regs.REG_MCA_SIGNAL_SELECT = 0;
-
-}
-
+void app_read_REG_MCA_SIGNAL_SELECT(void) {}
 bool app_write_REG_MCA_SIGNAL_SELECT(void *a)
 {
 	uint8_t reg = *((uint8_t*)a);
@@ -515,12 +508,7 @@ bool app_write_REG_MCA_SIGNAL_SELECT(void *a)
 /************************************************************************/
 /* REG_MCA_SIGNAL_GAIN                                                  */
 /************************************************************************/
-void app_read_REG_MCA_SIGNAL_GAIN(void)
-{
-	//app_regs.REG_MCA_SIGNAL_GAIN = 0;
-
-}
-
+void app_read_REG_MCA_SIGNAL_GAIN(void) {}
 bool app_write_REG_MCA_SIGNAL_GAIN(void *a)
 {
 	float reg = *((float*)a);
@@ -533,15 +521,10 @@ bool app_write_REG_MCA_SIGNAL_GAIN(void *a)
 /************************************************************************/
 /* REG_MCA_ZERO_THRESHOLD                                               */
 /************************************************************************/
-void app_read_REG_MCA_ZERO_THRESHOLD(void)
-{
-	//app_regs.REG_MCA_ZERO_THRESHOLD = 0;
-
-}
-
+void app_read_REG_MCA_ZERO_THRESHOLD(void) {}
 bool app_write_REG_MCA_ZERO_THRESHOLD(void *a)
 {
-	uint16_t reg = *((uint16_t*)a);
+	float reg = *((float*)a);
 
 	app_regs.REG_MCA_ZERO_THRESHOLD = reg;
 	return true;
@@ -551,15 +534,13 @@ bool app_write_REG_MCA_ZERO_THRESHOLD(void *a)
 /************************************************************************/
 /* REG_MCA_MAX_PULSE_INTERVAL                                           */
 /************************************************************************/
-void app_read_REG_MCA_MAX_PULSE_INTERVAL(void)
-{
-	//app_regs.REG_MCA_MAX_PULSE_INTERVAL = 0;
-
-}
-
+void app_read_REG_MCA_MAX_PULSE_INTERVAL(void) {}
 bool app_write_REG_MCA_MAX_PULSE_INTERVAL(void *a)
 {
 	uint16_t reg = *((uint16_t*)a);
+	
+	if (reg > 32000) return false;
+	if (reg < 102)   return false;
 
 	app_regs.REG_MCA_MAX_PULSE_INTERVAL = reg;
 	return true;
@@ -569,15 +550,12 @@ bool app_write_REG_MCA_MAX_PULSE_INTERVAL(void *a)
 /************************************************************************/
 /* REG_MCA_MIN_PULSE_INTERVAL                                           */
 /************************************************************************/
-void app_read_REG_MCA_MIN_PULSE_INTERVAL(void)
-{
-	//app_regs.REG_MCA_MIN_PULSE_INTERVAL = 0;
-
-}
-
+void app_read_REG_MCA_MIN_PULSE_INTERVAL(void) {}
 bool app_write_REG_MCA_MIN_PULSE_INTERVAL(void *a)
 {
 	uint16_t reg = *((uint16_t*)a);
+	
+	if (reg < 100) return false;
 
 	app_regs.REG_MCA_MIN_PULSE_INTERVAL = reg;
 	return true;

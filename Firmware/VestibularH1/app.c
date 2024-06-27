@@ -240,6 +240,40 @@ void core_callback_t_1ms(void)
 		*(((uint8_t*)(&app_regs.REG_REG_OPTICAL_TRACKING_READ[2]))+1) = 0;	// Clear high byte of [2]
 		*(((uint8_t*)(&app_regs.REG_REG_OPTICAL_TRACKING_READ[5]))+1) = 0;	// Clear high byte of [2]
 				
+		if (app_regs.REG_MCA_SIGNAL_SELECT != MSK_MCA_OFF)
+		{
+			int16_t input;
+			
+			switch (app_regs.REG_MCA_SIGNAL_SELECT)
+			{
+				case MSK_MCA_FLOW0_X: input = app_regs.REG_REG_OPTICAL_TRACKING_READ[0]; break;
+				case MSK_MCA_FLOW0_Y: input = app_regs.REG_REG_OPTICAL_TRACKING_READ[1]; break;
+				case MSK_MCA_FLOW1_X: input = app_regs.REG_REG_OPTICAL_TRACKING_READ[3]; break;
+				case MSK_MCA_FLOW1_Y: input = app_regs.REG_REG_OPTICAL_TRACKING_READ[4]; break;
+				default:              input = app_regs.REG_REG_OPTICAL_TRACKING_READ[0];
+			}
+			
+			bool signal_is_positive = (input >= 0) ? true : false;
+			
+			float signal = input * app_regs.REG_MCA_SIGNAL_GAIN * (signal_is_positive ? 1 : -1);
+			
+			int16_t motor_pulse_interval;
+						
+			if (signal < app_regs.REG_MCA_ZERO_THRESHOLD)
+			{
+				motor_pulse_interval = 0;
+			}
+			else
+			{
+				int16_t motor_pulse_interval = 1000000.0 / signal;
+				
+				if (motor_pulse_interval > app_regs.REG_MCA_MAX_PULSE_INTERVAL) motor_pulse_interval = app_regs.REG_MCA_MAX_PULSE_INTERVAL;
+				if (motor_pulse_interval < app_regs.REG_MCA_MIN_PULSE_INTERVAL) motor_pulse_interval = app_regs.REG_MCA_MIN_PULSE_INTERVAL;
+				
+				motor_pulse_interval = motor_pulse_interval * (signal_is_positive ? 1 : -1);
+			}
+		}
+		
 		core_func_send_event(ADD_REG_REG_OPTICAL_TRACKING_READ, true);
 		
 		optical_counter = 0;

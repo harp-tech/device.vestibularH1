@@ -124,30 +124,30 @@ registers:
     address: 50
     access: Read
     type: U8
-    maxValue: 12000
     maskType: MotorControlInputSignalSelection
     description: Select which sensor and axis will be used as the input signal for the motion control algorithm (MCA).
   MotorControlSignalGain:
     address: 51
     access: Read
     type: Float
-    maxValue: 12000
     description: Gain to be applied to the input signal.
   MotorControlZeroThreshold:
     address: 52
     access: Read
-    type: U16
-    maxValue: 12000
+    type: Float
     description: Specifies deadband for conversion from speed delta to motor's immediate pulses in microseconds.
   MotorControlMaxPulseInterval:
     address: 53
     access: Read
     type: U16
+    maxValue: 32000
+    minValue: 102
     description: Specifies the maximum of the motor's pulse interval in microseconds.
   MotorControlMinPulseInterval:
     address: 54
     access: Read
     type: U16
+    minValue: 100
     description: Specifies the minimum of the motor's pulse interval in microseconds.
 bitMasks:
   StartStopFlags:
