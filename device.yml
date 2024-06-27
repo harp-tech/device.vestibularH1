@@ -84,6 +84,26 @@ registers:
     access: Event
     type: S16
     length: 6
+    description: Flow meters values.
+    payloadSpec:
+      Flow0X:
+        offset: 0
+        description: Flow meter value on port 0 axis X.
+      Flow0Y:
+        offset: 0
+        description: Flow meter value on port 0 axis Y.
+      Flow0Squal:
+        offset: 0
+        description: Signal quality of flow meter 0.
+      Flow1X:
+        offset: 0
+        description: Flow meter value on port 0 axis X.
+      Flow1Y:
+        offset: 0
+        description: Flow meter value on port 0 axis Y.
+      Flow1Squaç:
+        offset: 0
+        description: Signal quality of flow meter 1.
   ProductIdPort0:
     address: 47
     access: Read
