@@ -112,7 +112,7 @@ void core_callback_initialize_hardware(void)
 	USARTD0_CTRLC = USART_CMODE_ASYNCHRONOUS_gc | USART_PMODE_DISABLED_gc | USART_CHSIZE_8BIT_gc;
 	USARTD0_BAUDCTRLA = *((uint8_t*)&BSEL);
 	USARTD0_BAUDCTRLB = (*(1+(uint8_t*)&BSEL) & 0x0F) | ((BSCALE<<4) & 0xF0);
-	USARTD1_CTRLB = USART_TXEN_bm;
+	USARTD0_CTRLB = USART_TXEN_bm;
 }
 
 void core_callback_reset_registers(void)
