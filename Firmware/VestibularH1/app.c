@@ -104,6 +104,15 @@ void core_callback_initialize_hardware(void)
 	
 	/* If PMW3360 is connected to port 1 */
 	//set_cpi_pmw3360_1(12000); // Default it 5000
+	
+	/* Initialize serial with 100 KHz */
+	uint16_t BSEL = 19;
+	int8_t BSCALE = 0;
+		
+	USARTD0_CTRLC = USART_CMODE_ASYNCHRONOUS_gc | USART_PMODE_DISABLED_gc | USART_CHSIZE_8BIT_gc;
+	USARTD0_BAUDCTRLA = *((uint8_t*)&BSEL);
+	USARTD0_BAUDCTRLB = (*(1+(uint8_t*)&BSEL) & 0x0F) | ((BSCALE<<4) & 0xF0);
+	USARTD1_CTRLB = USART_TXEN_bm;
 }
 
 void core_callback_reset_registers(void)
@@ -219,6 +228,9 @@ void core_callback_t_500us(void)
 		if (--pulse_countdown_valve1 == 0)
 			clr_VALVE1;
 }
+
+int16_t motor_pulse_interval;
+
 void core_callback_t_1ms(void)
 {
 	if (++optical_counter == optical_counter_divider)
@@ -256,21 +268,25 @@ void core_callback_t_1ms(void)
 			bool signal_is_positive = (input >= 0) ? true : false;
 			
 			float signal = input * app_regs.REG_MCA_SIGNAL_GAIN * (signal_is_positive ? 1 : -1);
-			
-			int16_t motor_pulse_interval;
 						
 			if (signal < app_regs.REG_MCA_ZERO_THRESHOLD)
 			{
 				motor_pulse_interval = 0;
+								
+				USARTD0_DATA = motor_pulse_interval & 0x00FF;
+				timer_type1_enable(&TCD1, TIMER_PRESCALER_DIV64, 50, INT_LEVEL_LOW);	// 100 us
 			}
 			else
 			{
-				int16_t motor_pulse_interval = 1000000.0 / signal;
+				motor_pulse_interval = 1000000.0 / signal;
 				
 				if (motor_pulse_interval > app_regs.REG_MCA_MAX_PULSE_INTERVAL) motor_pulse_interval = app_regs.REG_MCA_MAX_PULSE_INTERVAL;
 				if (motor_pulse_interval < app_regs.REG_MCA_MIN_PULSE_INTERVAL) motor_pulse_interval = app_regs.REG_MCA_MIN_PULSE_INTERVAL;
 				
 				motor_pulse_interval = motor_pulse_interval * (signal_is_positive ? 1 : -1);
+				
+				USARTD0_DATA = motor_pulse_interval & 0x00FF;
+				timer_type1_enable(&TCD1, TIMER_PRESCALER_DIV64, 50, INT_LEVEL_LOW);	// 100 us
 			}
 		}
 		
