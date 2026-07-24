@@ -459,7 +459,7 @@ void upload_the_firmware_pmw3360_0(void)
 		_delay_us(15);
 	}	
 	
-	spi_stop_flow0;
+	spi_stop_flow0();
 	_delay_us(40);
 	
 	/* Restart SPI */
@@ -500,7 +500,7 @@ void upload_the_firmware_pmw3360_1(void)
 		_delay_us(15);
 	}
 	
-	spi_stop_flow1;
+	spi_stop_flow1();
 	_delay_us(40);
 	
 	/* Restart SPI */
