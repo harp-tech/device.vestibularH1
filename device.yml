@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/harp-tech/reflex-generator/main/schema/device.json
 device: VestibularH1
 whoAmI: 1224
-firmwareVersion: "0.1"
+firmwareVersion: "1.2"
 hardwareTargets: "1.0"
 registers:
   Cam0Event:
@@ -79,11 +79,76 @@ registers:
     type: U8
     maskType: DO
     description: Bitmask to write the available outputs.
-  OpticalTrackingRead:
+  OpticalFlowData:
     address: 46
     access: Event
     type: S16
     length: 6
+    description: Reports the sampled values for optical flow displacement and signal quality.
+    payloadSpec:
+      DeltaX0:
+        offset: 0
+        description: The optical flow displacement measured on axis X of port 0.
+      DeltaY0:
+        offset: 1
+        description: The optical flow displacement measured on axis Y of port 0.
+      DeltaSqual0:
+        offset: 2
+        description: The quality of the optical flow signal on port 0.
+      DeltaX1:
+        offset: 3
+        description: The optical flow displacement measured on axis X of port 1.
+      DeltaY1:
+        offset: 4
+        description: The optical flow displacement measured on axis Y of port 1.
+      DeltaSqual1:
+        offset: 5
+        description: The quality of the optical flow signal on port 1.
+  OpticalFlowPid0:
+    address: 47
+    access: Read
+    type: U8
+    description: The product ID of the optical flow sensor connected to Port 0.
+  OpticalFlowPid1:
+    address: 48
+    access: Read
+    type: U8
+    description: The product ID of the optical flow sensor connected to Port 1.
+  CountsPerInch:
+    address: 49
+    access: Write
+    type: U16
+    maxValue: 12000
+    description: Configures the counts per inch of both channels for the PMW3360 with product ID equal to 66.  
+  MotorControlSignalSelection:
+    address: 50
+    access: Write
+    type: U8
+    maskType: MotorControlInputSignalSelection
+    description: Select which sensor and axis will be used as the input signal for the motion control algorithm (MCA).
+  MotorControlSignalGain:
+    address: 51
+    access: Write
+    type: Float
+    description: Gain to be applied to the input signal.
+  MotorControlZeroThreshold:
+    address: 52
+    access: Write
+    type: Float
+    description: Specifies deadband for conversion from speed delta to motor's immediate pulses in microseconds.
+  MotorControlMaxPulseInterval:
+    address: 53
+    access: Write
+    type: U16
+    maxValue: 32000
+    minValue: 102
+    description: Specifies the maximum of the motor's pulse interval in microseconds.
+  MotorControlMinPulseInterval:
+    address: 54
+    access: Write
+    type: U16
+    minValue: 100
+    description: Specifies the minimum of the motor's pulse interval in microseconds.
 bitMasks:
   StartStopFlags:
     description: Bitmask describing the enable or disable commands to send to the cameras.
@@ -108,3 +173,12 @@ bitMasks:
       Valve1:      0x8
       PulseValve0: 0x10
       PulseValve1: 0x2A
+groupMasks:
+  MotorControlInputSignalSelection:
+    description: Specifies the input signal for the motor control algorithm.
+    values:
+      Disabled: {0, description: Disable the motor control algorithm.}
+      DeltaX0: {1, description: Use the optical flow displacement on axis X of port 0.}
+      DeltaY0: {2, description: Use the optical flow displacement on axis Y of port 0.}
+      DeltaX1: {3, description: Use the optical flow displacement on axis X of port 1.}
+      DeltaY1: {4, description: Use the optical flow displacement on axis Y of port 1.}
