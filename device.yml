@@ -177,7 +177,7 @@ groupMasks:
   MotorControlInputSignalSelection:
     description: Specifies the input signal for the motor control algorithm.
     values:
-      Disabled: {0, description: Used as a pure digital input.}
+      Disabled: {0, description: Disable the motor control algorithm.}
       DeltaX0: {1, description: Use the optical flow displacement on axis X of port 0.}
       DeltaY0: {2, description: Use the optical flow displacement on axis Y of port 0.}
       DeltaX1: {3, description: Use the optical flow displacement on axis X of port 1.}
